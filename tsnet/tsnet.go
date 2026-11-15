@@ -1089,7 +1089,9 @@ func (s *Server) resolveAuthKey() (string, error) {
 }
 
 func (s *Server) startLogger(closePool *closeOnErrorPool, health *health.Tracker, tsLogf logger.Logf) error {
-	if testenv.InTest() {
+	// TS_NO_LOGS_NO_SUPPORT turns off uploading the logs, as it does for
+	// tailscaled (logpolicy).
+	if testenv.InTest() || envknob.NoLogsNoSupport() {
 		return nil
 	}
 	cfgPath := filepath.Join(s.rootPath, "tailscaled.log.conf")
